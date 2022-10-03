@@ -1,0 +1,44 @@
+package objects_and_classes;
+import java.util.Scanner;
+public class Student {
+	Scanner sc = new Scanner(System.in);
+	
+	//Data Members
+	private String name;
+	private int rollno, marks1, marks2, marks3;
+	
+	//methods
+	public void acceptInfo(){
+		System.out.println("Enter details: Name and RollNo.");
+		name = sc.next();
+		rollno = sc.nextInt();
+		
+		System.out.println("Enter details: Marks1, Marks2, Marks3.");
+		marks1 = sc.nextInt();
+		marks2 = sc.nextInt();
+		marks3 = sc.nextInt();
+	}
+	
+	public void display() {
+		
+		System.out.println("Name:"+name+"\nRollNo: "+rollno+"\nMarks1: "+marks1+"\nMarks2: "+marks2+"\nMarks3: "+marks3);
+		
+	}
+	
+	public void displayStats() {
+		float total = marks1+marks2+marks3;
+		float per = (total/30)*100;
+		String grade;
+		
+		if(per>75)
+			grade = "A";
+		else if(per<75 && per>60)
+			grade = "B";
+		else
+			grade = "C";
+		
+		System.out.println("Total Marks: "+total+"\nPercentage: "+per+"\nGrade: "+grade);
+		}
+	}
+	
+
