@@ -1,0 +1,248 @@
+	Assignments:- Database Technologies
+
+
+1.To list all records with sal > 2000 and comm>200.
+
+mysql> select EMPNO,ENAME
+    -> FROM EMP
+    -> WHERE SAL>2000 AND COMM>200;
+
+Empty set (0.08 sec)
+
+
+2.To list all record with job=’Clerk’ or sal>2000.
+	
+mysql> select EMPNO,ENAME,JOB,SAL
+    -> from emp
+    -> where JOB='CLERK' or SAL>2000;
++-------+--------+-----------+---------+
+| EMPNO | ENAME  | JOB       | SAL     |
++-------+--------+-----------+---------+
+|  7369 | SMITH  | CLERK     |  800.00 |
+|  7566 | JONES  | MANAGER   | 2975.00 |
+|  7698 | BLAKE  | MANAGER   | 2850.00 |
+|  7782 | CLARK  | MANAGER   | 2450.00 |
+|  7788 | SCOTT  | ANALYST   | 3000.00 |
+|  7839 | KING   | PRESIDENT | 5000.00 |
+|  7876 | ADAMS  | CLERK     | 1100.00 |
+|  7900 | JAMES  | CLERK     |  950.00 |
+|  7902 | FORD   | ANALYST   | 3000.00 |
+|  7934 | MILLER | CLERK     | 1300.00 |
++-------+--------+-----------+---------+
+10 rows in set (0.00 sec)
+ 
+
+3.To list all the record with sal=1250 or 1100 or 2850.
+
+mysql> select *
+    -> from EMP
+    -> where SAL in (1250, 1100, 2850);
++-------+--------+----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE  | MANAGER  | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+|  7876 | ADAMS  | CLERK    | 7788 | 1983-01-12 | 1100.00 |    NULL |     20 |
++-------+--------+----------+------+------------+---------+---------+--------+
+4 rows in set (0.00 sec)
+
+4.To list all employees with sal>1250 and <2850.
+
+mysql> select EMPNO,ENAME,SAL
+    -> from EMP
+    -> where SAL between 1251 and 2849;
++-------+--------+---------+
+| EMPNO | ENAME  | SAL     |
++-------+--------+---------+
+|  7499 | ALLEN  | 1600.00 |
+|  7782 | CLARK  | 2450.00 |
+|  7844 | TURNER | 1500.00 |
+|  7934 | MILLER | 1300.00 |
++-------+--------+---------+
+4 rows in set (0.00 sec)
+ 
+5. To list all employees with name ends with AS.
+
+	
+mysql> select EMPNO,ENAME
+    -> FROM EMP
+    -> where ENAME like '%AS';
+Empty set (0.00 sec)
+
+6. To list all employees with job starts with C and ends with K.
+
+mysql> select EMPNO,ENAME,JOB
+    -> from EMP
+    -> where JOB like 'c%k';
++-------+--------+-------+
+| EMPNO | ENAME  | JOB   |
++-------+--------+-------+
+|  7369 | SMITH  | CLERK |
+|  7876 | ADAMS  | CLERK |
+|  7900 | JAMES  | CLERK |
+|  7934 | MILLER | CLERK |
++-------+--------+-------+
+4 rows in set (0.00 sec)
+
+7. To list all employees with job contains L at third position and
+M at third last position.
+
+mysql> select EMPNO,ENAME,JOB
+    -> from EMP
+    -> where JOB like '__l%m__';
++-------+--------+----------+
+| EMPNO | ENAME  | JOB      |
++-------+--------+----------+
+|  7499 | ALLEN  | SALESMAN |
+|  7521 | WARD   | SALESMAN |
+|  7654 | MARTIN | SALESMAN |
+|  7844 | TURNER | SALESMAN |
++-------+--------+----------+
+4 rows in set (0.00 sec)
+
+8. To list all the record with sal not equal to 1250 or 1100 or 2850.
+
+mysql> select EMPNO,ENAME,SAL
+    -> FROM EMP
+    -> where SAL not in (1250, 1100, 2850);
++-------+--------+---------+
+| EMPNO | ENAME  | SAL     |
++-------+--------+---------+
+|  7369 | SMITH  |  800.00 |
+|  7499 | ALLEN  | 1600.00 |
+|  7566 | JONES  | 2975.00 |
+|  7782 | CLARK  | 2450.00 |
+|  7788 | SCOTT  | 3000.00 |
+|  7839 | KING   | 5000.00 |
+|  7844 | TURNER | 1500.00 |
+|  7900 | JAMES  |  950.00 |
+|  7902 | FORD   | 3000.00 |
+|  7934 | MILLER | 1300.00 |
++-------+--------+---------+
+10 rows in set (0.00 sec)
+
+9. To list all employees with salnot >1250 and <2850.
+
+mysql> select EMPNO,ENAME,SAL
+    -> FROM EMP
+    -> where SAL not between 1251 and 2849
+    -> ;
++-------+--------+---------+
+| EMPNO | ENAME  | SAL     |
++-------+--------+---------+
+|  7369 | SMITH  |  800.00 |
+|  7521 | WARD   | 1250.00 |
+|  7566 | JONES  | 2975.00 |
+|  7654 | MARTIN | 1250.00 |
+|  7698 | BLAKE  | 2850.00 |
+|  7788 | SCOTT  | 3000.00 |
+|  7839 | KING   | 5000.00 |
+|  7876 | ADAMS  | 1100.00 |
+|  7900 | JAMES  |  950.00 |
+|  7902 | FORD   | 3000.00 |
++-------+--------+---------+
+10 rows in set (0.00 sec)
+
+10. To list all employees with job starts with C , E at 3rd position and ends with K.
+
+mysql> select EMPNO,ENAME,JOB
+    -> FROM EMP
+    -> where job like 'c_e%k';
++-------+--------+-------+
+| EMPNO | ENAME  | JOB   |
++-------+--------+-------+
+|  7369 | SMITH  | CLERK |
+|  7876 | ADAMS  | CLERK |
+|  7900 | JAMES  | CLERK |
+|  7934 | MILLER | CLERK |
++-------+--------+-------+
+4 rows in set (0.00 sec)
+
+11. To list all rows with comm is null.
+
+mysql> select *
+    -> from EMP
+    -> where COMM is null;
++-------+--------+-----------+------+------------+---------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
++-------+--------+-----------+------+------------+---------+------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800.00 | NULL |     20 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975.00 | NULL |     20 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450.00 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000.00 | NULL |     10 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1983-01-12 | 1100.00 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950.00 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300.00 | NULL |     10 |
++-------+--------+-----------+------+------------+---------+------+--------+
+10 rows in set (0.00 sec)
+
+
+12. To list all employees with sal is null and name starts with ‘S’.
+
+
+mysql> select EMPNO,ENAME,SAL
+    -> FROM EMP
+    -> WHERE SAL is null and ENAME like '%s';
+Empty set (0.00 sec)
+
+13. To list all employees with job contains 5 characters.
+
+mysql> select EMPNO,ENAME,JOB
+    -> FROM EMP
+    -> WHERE JOB like '_____';
++-------+--------+-------+
+| EMPNO | ENAME  | JOB   |
++-------+--------+-------+
+|  7369 | SMITH  | CLERK |
+|  7876 | ADAMS  | CLERK |
+|  7900 | JAMES  | CLERK |
+|  7934 | MILLER | CLERK |
++-------+--------+-------+
+4 rows in set (0.00 sec)
+
+
+14. To list all employees with name contain ‘A’ at 1 position and job 
+Contains 5 characters.
+
+mysql> select EMPNO,ENAME,JOB
+    -> FROM EMP
+    -> WHERE JOB like '_____' and ENAME like 'A%';
++-------+-------+-------+
+| EMPNO | ENAME | JOB   |
++-------+-------+-------+
+|  7876 | ADAMS | CLERK |
++-------+-------+-------+
+1 row in set (0.00 sec)
+
+
+Q2. Solve the following
+1. Retrieve the details (Name, Salary and dept no) of the emp who are working in 
+department code 20, 30 and 40.
+
+mysql> select ENAME,SAL,DEPTNO
+    -> from emp
+    -> where DEPTNO in (20,30,40);
++--------+---------+--------+
+| ENAME  | SAL     | DEPTNO |
++--------+---------+--------+
+| SMITH  |  800.00 |     20 |
+| ALLEN  | 1600.00 |     30 |
+| WARD   | 1250.00 |     30 |
+| JONES  | 2975.00 |     20 |
+| MARTIN | 1250.00 |     30 |
+| BLAKE  | 2850.00 |     30 |
+| SCOTT  | 3000.00 |     20 |
+| TURNER | 1500.00 |     30 |
+| ADAMS  | 1100.00 |     20 |
+| JAMES  |  950.00 |     30 |
+| FORD   | 3000.00 |     20 |
++--------+---------+--------+
+11 rows in set (0.00 sec)
+
+
+
+
