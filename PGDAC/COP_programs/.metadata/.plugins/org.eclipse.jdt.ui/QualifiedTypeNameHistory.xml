@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.lang.Math"/>
+    <fullyQualifiedTypeName name="objects_and_classes.Student"/>
+    <fullyQualifiedTypeName name="objects_and_classes.Person"/>
+    <fullyQualifiedTypeName name="objects_and_classes.Date"/>
+    <fullyQualifiedTypeName name="objects_and_classes.Book"/>
+    <fullyQualifiedTypeName name="objects_and_classes.Point"/>
+    <fullyQualifiedTypeName name="objects_and_classes.ComplexNumber"/>
+    <fullyQualifiedTypeName name="objects_and_classes.BankAccount"/>
+    <fullyQualifiedTypeName name="com.sun.java_cup.internal.runtime.Scanner"/>
+</qualifiedTypeNameHistroy>

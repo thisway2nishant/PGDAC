@@ -1,0 +1,39 @@
+package objects_and_classes;
+
+public class BankAccount {
+
+	private int accid,balance,phoneno;
+	private String name;
+	
+	//constructor
+	public BankAccount() {
+		
+		this.balance=balance;
+		this.name=name;
+		this.phoneno=phoneno;
+			
+	}
+
+	public BankAccount( String name, int balance, int phoneno) {
+		
+		this.balance = balance;
+		this.phoneno = phoneno;
+		this.name = name;
+	}
+	
+	public void withdraw(int money) {
+		this.balance=this.balance-money;
+		System.out.println("Money withdrawn: "+money+"\nBalance: "+balance);
+	}
+	
+	public void deposit(int money) {
+		this.balance = this.balance+money;
+		System.out.println("Money deposited: "+money+"\nBalance: "+balance);
+	}
+	
+	public void showBalance() {
+		System.out.println("Your balance is "+this.balance);
+	}
+		
+}
+
