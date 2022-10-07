@@ -1276,10 +1276,312 @@ mysql> select emp2.ename, dept.dname
 +--------+------------+
 14 rows in set (0.00 sec)
 
-
 52. display empno,name,department name and grade (use emp,dept and salgrade table)
 
+mysql> select e.empno, e.ename, d.dname, s.grade
+    -> from emp2 e inner join dept d on d.deptno=e.deptno
+    -> inner join salgrade s on e.sal between s.losal and s.hisal;
++-------+--------+------------+-------+
+| empno | ename  | dname      | grade |
++-------+--------+------------+-------+
+|  7369 | SMITH  | RESEARCH   |     1 |
+|  7499 | ALLEN  | SALES      |     3 |
+|  7521 | WARD   | SALES      |     3 |
+|  7566 | JONES  | RESEARCH   |     4 |
+|  7654 | MARTIN | SALES      |     3 |
+|  7698 | BLAKE  | SALES      |     4 |
+|  7782 | CLARK  | ACCOUNTING |     4 |
+|  7788 | SCOTT  | RESEARCH   |     4 |
+|  7839 | KING   | ACCOUNTING |     5 |
+|  7844 | TURNER | SALES      |     3 |
+|  7876 | ADAMS  | RESEARCH   |     1 |
+|  7900 | JAMES  | SALES      |     1 |
+|  7902 | FORD   | RESEARCH   |     4 |
+|  7934 | MILLER | ACCOUNTING |     3 |
++-------+--------+------------+-------+
+14 rows in set (0.00 sec)
+
 53. list all employees number,name, mgrno and manager name.
+
+
+mysql> select e.empno, e.ename, e.mgr managerNo, m.ename managerName
+    -> from emp2 e inner join emp2 m on m.empno = e.mgr;
++-------+--------+-----------+-------------+
+| empno | ename  | managerNo | managerName |
++-------+--------+-----------+-------------+
+|  7788 | SCOTT  |      7566 | JONES       |
+|  7902 | FORD   |      7566 | JONES       |
+|  7499 | ALLEN  |      7698 | BLAKE       |
+|  7521 | WARD   |      7698 | BLAKE       |
+|  7654 | MARTIN |      7698 | BLAKE       |
+|  7844 | TURNER |      7698 | BLAKE       |
+|  7900 | JAMES  |      7698 | BLAKE       |
+|  7876 | ADAMS  |      7788 | SCOTT       |
+|  7566 | JONES  |      7839 | KING        |
+|  7698 | BLAKE  |      7839 | KING        |
+|  7369 | SMITH  |      7902 | FORD        |
++-------+--------+-----------+-------------+
+11 rows in set (0.00 sec)
+
+
+
+54. create following tables and solve following questions(primary keys are marked in yellow)
+foreign keys are marked in green
+
+product(pid,pname,price,qty,cid,sid)
+salesman (sid,sname,address)
+category(cid,cnam,descritpion)
+
+1. list all product name,their category name and name of a person, who sold that product
+
+mysql> select p.pname Product, c.cname Category, s.sname Salesman
+    -> from product p inner join category c on c.cid=p.cid
+    -> inner join salesman s on s.sid=p.sid;
++------------+-------------+----------+
+| Product    | Category    | Salesman |
++------------+-------------+----------+
+| Pepsi      | cold drinks | rahul    |
+| lays       | chips       | Kirti    |
+| dairy nilk | chocolate   | Arnav    |
+| nachos     | chips       | Kirti    |
++------------+-------------+----------+
+4 rows in set (0.00 sec)
+
+
+2.List all product name and salesman name for all salesman who stays in pune.
+
+mysql> select p.pname Product, s.sname Salesman
+    -> from product p inner join salesman s on s.sid = p.sid
+    -> where s.address = "pune";
++---------+----------+
+| Product | Salesman |
++---------+----------+
+| Pepsi   | rahul    |
++---------+----------+
+1 row in set (0.00 sec)
+
+3. list all product name and category name.
+
+mysql> select p.pname Product, c.cname Category
+    -> from product p inner join category c on c.cid = p.cid;
++------------+-------------+
+| Product    | Category    |
++------------+-------------+
+| Pepsi      | cold drinks |
+| lays       | chips       |
+| dairy nilk | chocolate   |
+| nachos     | chips       |
++------------+-------------+
+4 rows in set (0.00 sec)
+
+
+create following tables and solve following questions(primary keys are marked in yellow)
+foreign keys are marked in green
+
+faculty(fid,fname,sp.skill1,sp.skill2)
+courses(cid,cname,rid,fid)
+room(roomid,rname,rloc)
+
+
+1.list all courses for which no room is assigned and all rooms for which are 
+available.
+
+mysql> select c.cid,c.cname,c.rid,r.rid,r.rname,r.rloc
+    ->     from courses c  left outer join room r
+    ->     on c.rid=r.rid
+    -> where c.rid is null
+    -> union
+    -> select c.cid,c.cname,c.rid,r.rid,r.rname,r.rloc
+    ->     from courses c  right outer join room r
+    ->     on c.rid=r.rid
+    -> where c.rid is null;
++------+--------+------+------+-------+-----------+
+| cid  | cname  | rid  | rid  | rname | rloc      |
++------+--------+------+------+-------+-----------+
+|  141 | DITISS | NULL | NULL | NULL  | NULL      |
+| NULL | NULL   | NULL |  103 | Mogra | 1st floor |
++------+--------+------+------+-------+-----------+
+2 rows in set (0.00 sec)
+
+2. list all faculties who are not allocated to any course and rooms which are not 
+allocated to any course
+
+mysql>  select f.fid,f.fname,c.fid,c.cname,"" as cname,"" as rname ,"" as rid,"" as rid
+    ->    from courses c right join faculty f on f.fid=c.fid
+    ->      where c.fid is null
+    ->      union
+    ->     select "","","","",c.cname,r.rname,r.rid,c.rid
+    ->     from courses c right join room r on c.rid=r.rid
+    ->     where c.rid is null;
++-----+--------+------+-------+-------+-------+-----+------+
+| fid | fname  | fid  | cname | cname | rname | rid | rid  |
++-----+--------+------+-------+-------+-------+-----+------+
+| 11  | madhur | NULL | NULL  |       |       |     |      |
+| 13  | sonam  | NULL | NULL  |       |       |     |      |
+|     |        |      |       | NULL  | Mogra | 103 | NULL |
++-----+--------+------+-------+-------+-------+-----+------+
+3 rows in set (0.00 sec)
+
+
+3. list all rooms which are allocated or not allocated to any courses
+
+
+mysql> select r.roomid, r.rname, c.cname, c.roomid
+    -> from room r left join courses c on c.roomid = r.roomid
+    -> where exists(
+    -> select *
+    -> from courses c
+    -> where c.roomid is null);
++--------+--------+-------+--------+
+| roomid | rname  | cname | roomid |
++--------+--------+-------+--------+
+|    100 | jasmin | DBDA  |    100 |
+|    105 | Lotus  | DIOT  |    105 |
+|    103 | Mogra  | NULL  |   NULL |
+|    101 | rose   | DAC   |    101 |
++--------+--------+-------+--------+
+4 rows in set (0.00 sec)
+
+
+4. list all rooms which are not allocated to any courses
+
+mysql> select r.roomid, r.rname, c.cname
+    -> from room r left join courses c on c.roomid = r.roomid
+    -> where c.roomid is null;
++--------+-------+-------+
+| roomid | rname | cname |
++--------+-------+-------+
+|    103 | Mogra | NULL  |
++--------+-------+-------+
+1 row in set (0.00 sec)
+
+
+5. display courses and faculty assigned to those courses whose special skill is 
+database.
+
+mysql> select c.cid, c.cname, c.fid, f.fname
+    -> from courses c left join faculty f on c.fid = f.fid
+    -> where c.fid = (
+    -> select fid
+    -> from faculty
+    -> where skill1 = "database" or skill2 = "database");
++-----+-------+------+--------+
+| cid | cname | fid  | fname  |
++-----+-------+------+--------+
+| 121 | DBDA  |   10 | Akriti |
++-----+-------+------+--------+
+1 row in set (0.00 sec)
+
+
+6. display time table --- it should contain course details , faculty and room 
+details
+
+
+
+56. create following tables with given constraints
+product---- qty >0, default 20.00,pname not null and unique
+prodid pname qty price catid sid
+123 lays 30 30.00 1 12
+111 pepsi 40 50.00 4 11
+134 nachos 50 50.00 1 12
+124 dairy milk 40 60.00 2 14 
+124 pringles 40 60.00 1 14 
+saleman ----- sname -----not null
+sid sname city 
+11 Rahul Pune
+12 Kirti Mumbai
+13 Prasad Nashik
+14 Arnav Amaravati 
+category ---- cname unique and not null 
+cid cname description
+1 chips very crunchy
+2 chocolate very chocolaty
+3 snacks yummy
+4 cold drinks thanda thanda cool cool
+
+
+1.List all products with category chips
+
+mysql> select p.pid, p.pname, p.price, c.cname
+    -> from product p inner join category c on p.cid = c.cid;
++-----+------------+-------+-------------+
+| pid | pname      | price | cname       |
++-----+------------+-------+-------------+
+| 111 | Pepsi      | 40.00 | cold drinks |
+| 123 | lays       | 30.00 | chips       |
+| 124 | dairy nilk | 40.00 | chocolate   |
+| 134 | nachos     | 50.00 | chips       |
++-----+------------+-------+-------------+
+4 rows in set (0.02 sec)
+
+2.display all products sold by kirti
+
+mysql> select p.pid, p.pname, p.sid, s.sname
+    -> from product p left join salesman s on p.sid = s.sid
+    -> where p.sid = (
+    -> select sid
+    -> from salesman
+    -> where sname = "Kirti");
++-----+--------+------+-------+
+| pid | pname  | sid  | sname |
++-----+--------+------+-------+
+| 123 | lays   |   12 | Kirti |
+| 134 | nachos |   12 | Kirti |
++-----+--------+------+-------+
+2 rows in set (0.03 sec)
+
+3.display all salesman who do not sold any product
+
+mysql> select s.sid, s.sname
+    -> from salesman s inner join product p on p.sid = s.sid
+    -> where p.sid is null;
+Empty set (0.00 sec)
+
+4.display all category for which no product is there
+
+mysql> select c.cid, c.cname
+    -> from category c left join product p on p.cid = c.cid
+    -> where c.cid != p.cid;
+Empty set (0.00 sec)
+
+5.display all products with no category assigned
+
+mysql> select  p.pid, p.pname, p.cid
+    -> from product p
+    -> where cid is null;
+Empty set (0.00 sec)
+
+6.list all salesman who stays in city with name starts with P or N
+
+mysql> select sid, sname, address
+    -> from salesman
+    -> where address regexp '^[p,n]';
++-----+--------+---------+
+| sid | sname  | address |
++-----+--------+---------+
+|  11 | rahul  | Pune    |
+|  13 | prasad | Nashik  |
++-----+--------+---------+
+2 rows in set (0.00 sec)
+
+7.add new column in salesman table by name credit limit
+
+
+mysql> alter table salesman
+    -> add column credLimit int default 100;
+Query OK, 0 rows affected (0.46 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc salesman;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| sid       | int         | NO   | PRI | NULL    |       |
+| sname     | varchar(20) | NO   |     | NULL    |       |
+| address   | varchar(20) | YES  |     | NULL    |       |
+| credLimit | int         | YES  |     | 100     |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
 
 
 
