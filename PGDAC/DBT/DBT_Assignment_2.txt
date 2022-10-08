@@ -1476,7 +1476,25 @@ mysql> select c.cid, c.cname, c.fid, f.fname
 6. display time table --- it should contain course details , faculty and room 
 details
 
-
+mysql> select c.cid, c.cname, c.fid, f.fname, "" as roomid, ""as roomname
+    -> from courses c left join faculty f on c.fid = f.fid
+    -> union
+    -> select c.cid, c.cname, c.fid, null, r.rid, r.rname
+    -> from courses c left join room r on c.rid = r.rid
+    -> ;
++-----+--------+------+--------+--------+----------+
+| cid | cname  | fid  | fname  | roomid | roomname |
++-----+--------+------+--------+--------+----------+
+| 121 | DBDA   |   10 | Akriti |        |          |
+| 131 | DAC    | NULL | NULL   |        |          |
+| 141 | DITISS | NULL | NULL   |        |          |
+| 151 | DIOT   |   12 | divya  |        |          |
+| 121 | DBDA   |   10 | NULL   | 100    | jasmin   |
+| 131 | DAC    | NULL | NULL   | 101    | rose     |
+| 141 | DITISS | NULL | NULL   | NULL   | NULL     |
+| 151 | DIOT   |   12 | NULL   | 105    | Lotus    |
++-----+--------+------+--------+--------+----------+
+8 rows in set (0.00 sec)
 
 56. create following tables with given constraints
 product---- qty >0, default 20.00,pname not null and unique
