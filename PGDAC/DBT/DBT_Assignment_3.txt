@@ -463,3 +463,20 @@ mysql> select *
 
 14. create a procedure getMin(deptno,minsal) to find minimum salary of given table.
 
+mysql> delimiter $$
+    ->create procedure minSal(in pdno int)
+    ->begin
+    ->select min(sal) 
+    ->from emp2
+    ->where deptno = pdno;
+    ->end$$
+    ->delimiter;
+
+
+mysql> call minSal(20);
++----------+
+| min(sal) |
++----------+
+|   800.00 |
++----------+
+1 row in set (0.00 sec)
