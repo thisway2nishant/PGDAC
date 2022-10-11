@@ -1,0 +1,220 @@
+Solve the following
+1. write a procedure to insert record into employee table.
+the procedure should accept empno, ename, sal, job, hiredate as input parameter
+write insert statement inside procedure insert_rec to add one record into table.
+
+mysql> delimiter $$
+mysql> create procedure insert_rec(in pempno int, pename varchar(20), psal decimal(9, 2), pjob varchar(20), phdt date)
+    -> begin
+    -> insert into emp2(empno, ename, sal, job, hiredate) values
+    -> (pempno, pename, psal, pjob, phdt);
+    -> end $$
+Query OK, 0 rows affected (0.18 sec)
+
+mysql> delimiter ;
+mysql> call insert_rec(110, "Akshay", 1500, "Clerk", '1998-12-02');
+Query OK, 1 row affected (0.19 sec)
+
+2. write a procedure to delete record from employee table.
+the procedure should accept empno as input parameter.
+write delete statement inside procedure delete_emp to delete one record from emp 
+table.
+
+mysql> delimiter $$
+mysql> create procedure delete_emp(in pempno int)
+    -> brgin
+    -> ^C
+mysql> ^C
+mysql> delimiter $$
+mysql> create procedure delete_emp(in pempno int)
+    -> begin
+    -> delete from emp2
+    -> where empno = pempno;
+    -> end $$
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> delimiter ;
+mysql> call delete_emp(110);
+Query OK, 2 rows affected (0.16 sec)
+
+3. write a procedure to display empno,ename,deptno,dname for all employees with sal 
+> given salary. pass salary as a parameter to procedure
+
+mysql> delimiter $$
+mysql> create procedure dispSal(in psal int)
+    -> begin
+    -> select e.empno, e.ename, e.deptno, d.dname
+    -> from emp2 e inner join dept d on e.deptno = d.deptno
+    -> where e.sal > psal;
+    -> end $$
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> delimiter ;
+mysql> call dispSal(2000);
+
++-------+---------+--------+------------+
+| empno | ename   | deptno | dname      |
++-------+---------+--------+------------+
+|  7566 | JONES   |     20 | RESEARCH   |
+|  7698 | BLAKE   |     30 | SALES      |
+|  7782 | CLARK   |     10 | ACCOUNTING |
+|  7788 | SCOTT   |     20 | RESEARCH   |
+|  7839 | KING    |     10 | ACCOUNTING |
+|  7902 | FORD    |     20 | RESEARCH   |
+|  7569 | Nishant |     30 | SALES      |
+|  7570 | Akshay  |     30 | SALES      |
+|  7571 | Lavee   |     30 | SALES      |
++-------+---------+--------+------------+
+9 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+4. write a procedure to find min,max,avg of salary and number of employees in the 
+given deptno.
+deptno --→ in parameter 
+min,max,avg and count ---→ out type parameter
+execute procedure and then display values min,max,avg and count
+
+delimiter $$
+create procedure dispSalary(in pdeptno int, out vmax decimal(9, 2), out vmin decimal(9, 2), vavg decimal(9, 2), vcount int)
+begin
+declare 
+select min(e.sal) minSal, max(e.sal) maxSal, truncate(avg(e.sal), 2) average, count(*) No_of_emp into vmax, vmin, vavg, vcount
+from emp2 e
+where e.deptno = pdeptno;
+end $$
+
+mysql> call dispSalary(10);
++--------+---------+---------+---------+-----------+
+| deptno | minSal  | maxSal  | average | No_of_emp |
++--------+---------+---------+---------+-----------+
+|     10 | 1495.00 | 5750.00 | 2890.62 |         4 |
++--------+---------+---------+---------+-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+5. write a procedure to display all pid,pname,cid,cname and salesman name(use 
+product,category and salesman table)
+
+mysql> delimiter $$
+mysql> create procedure dispSalesman()
+    -> begin
+    -> select p.pid, p.pname, c.cid, c.cname, s.sname
+    -> from product p inner join category c on p.cid = c.cid inner join salesman s on p.sid = s.sid;
+    -> end $$
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> delimiter ;
+mysql> call dispSalesman();
++-----+------------+-----+-------------+-------+
+| pid | pname      | cid | cname       | sname |
++-----+------------+-----+-------------+-------+
+| 111 | Pepsi      |   4 | cold drinks | rahul |
+| 123 | lays       |   1 | chips       | Kirti |
+| 124 | dairy nilk |   2 | chocolate   | Arnav |
+| 134 | nachos     |   1 | chips       | Kirti |
++-----+------------+-----+-------------+-------+
+4 rows in set (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+6. write a procedure to display all vehicles bought by a customer. pass customer name as 
+a parameter.(use vehicle,salesman,customer and relation table)
+mysql> delimiter $$
+mysql> create procedure dispCust(in pcname varchar(20))
+    -> begin
+    -> select cv.custid Customer_ID, c.cname Customer_Name, cv.vid Vehicle_ID, v.vname Vehicle_Name
+    -> from custvehicle cv inner join customer c on cv.custid = c.custid inner join vehicle v on cv.vid = v.vid
+    -> where c.cname = pcname;
+    -> end $$
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> call dispCust('Nilima');
++-------------+---------------+------------+--------------+
+| Customer_ID | Customer_Name | Vehicle_ID | Vehicle_Name |
++-------------+---------------+------------+--------------+
+|           1 | Nilima        |          1 | Activa       |
+|           1 | Nilima        |          2 | Santro       |
++-------------+---------------+------------+--------------+
+2 rows in set (0.00 sec)
+
+7. Write a procedure that displays the following information of all emp
+Empno,Name,job,Salary,Status,deptno
+Note: - Status will be (Greater, Lesser or Equal) respective to average salary of their own
+department. Display an error message Emp table is empty if there is no matching
+record.
+
+
+
+8. Write a procedure to update salary in emp table based on following rules.
+Exp< =35 then no Update
+Exp> 35 and <=38 then 20% of salary
+Exp> 38 then 25% of salary
+
+
+
+9. Write a procedure and a function.
+Function: write a function to calculate number of years of experience of employee.(note: 
+pass hiredate as a parameter)
+Procedure: Capture the value returned by the above function to calculate the additional
+allowance for the emp based on the experience.
+Additional Allowance = Year of experience x 3000
+Calculate the additional allowance 
+and store Empno, ename,Date of Joining, and Experience in
+years and additional allowance in Emp_Allowance table.
+create table emp_allowance(
+empno int,
+ename varchar(20),
+hiredate date,
+experience int,
+allowance decimal(9,2));
+
+
+
+10. Write a function to compute the following. Function should take sal and hiredate 
+as i/p and return the cost to company.
+DA = 15% Salary, HRA= 20% of Salary, TA= 8% of Salary.
+Special Allowance will be decided based on the service in the company.
+< 1 Year Nil
+>=1 Year< 2 Year 10% of Salary
+>=2 Year< 4 Year 20% of Salary
+>4 Year 30% of Salary
+11. Write query to display empno,ename,sal,cost to company for all employees(note: 
+use function written in question 10)
+Q2. Write trigger
+1. Write a tigger to store the old salary details in Emp _Back (Emp _Back has the 
+same structure as emp table without any
+constraint) table.
+(note :create emp_back table before writing trigger)
+----- to create emp_back table
+create table emp_back(
+empno int,
+ename varchar(20),
+oldsal decimal(9,2),
+newsal decimal(9,2)
+)
+(note :
+execute procedure written in Q8 and 
+check the entries in EMP_back table after execution of the procedure)
+2. Write a trigger which add entry in audit table when user tries to insert or delete 
+records in employee table store empno,name,username and date on which 
+operation performed and which action is done insert or delete. in emp_audit table.
+create table before writing trigger.
+create table empaudit(
+ empno int;
+ ename varchar(20),
+ username varchar(20);
+ chdate date;
+ action varchar(20)
+);
+3. Create table vehicle_history. Write a trigger to store old vehicleprice and new vehicle 
+price in history table before you update price in vehicle table
+(note: use vehicle table).
+create table vehicle_history(
+vno int,
+vname varchar(20),
+oldprice decimal(9,2),
+newprice decimal(9,2),
+chdate date,
+username varchar(20)
