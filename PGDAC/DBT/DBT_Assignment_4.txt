@@ -145,14 +145,225 @@ Note: - Status will be (Greater, Lesser or Equal) respective to average salary o
 department. Display an error message Emp table is empty if there is no matching
 record.
 
+mysql> delimiter $$
+mysql> create procedure dispEmp()
+    -> begin
+    -> declare v_stop int default 0;
+    -> declare vempno int;
+    -> declare vname varchar(20);
+    -> declare vjob varchar(20);
+    -> declare vsal decimal(9, 2);
+    -> declare status varchar(20);
+    -> declare vdeptno int;
+    -> declare vavg decimal(9, 2);
+    -> declare empcur cursor for select empno, ename, job, sal, deptno from emp2;
+    -> declare continue handler for Not Found set v_stop=1;
+    -> open empcur;
+    -> label1: loop
+    -> fetch empcur into vempno, vname, vjob, vsal, vdeptno;
+    -> if v_stop=1 then
+    -> leave label1;
+    -> end if;
+    ->
+    -> select truncate(avg(sal), 2) into vavg
+    -> from emp2 e
+    -> where e.deptno = vdeptno;
+    ->
+    -> if vsal>vavg then
+    -> set status = 'Greater';
+    -> elseif vsal<vavg then
+    -> set status = 'Lesser';
+    -> else
+    -> set status = 'Equal';
+    -> end if;
+    ->
+    -> select vempno, vname, vjob, vsal, vdeptno, status;
+    -> end loop;
+    -> close empcur;
+    -> end $$
+Query OK, 0 rows affected (0.07 sec)
 
+mysql> delimiter ;
+mysql> call dispEmp();
++--------+-------+----------+--------+---------+--------+
+| vempno | vname | vjob     | vsal   | vdeptno | status |
++--------+-------+----------+--------+---------+--------+
+|   7369 | SMITH | Sr.Clerk | 800.00 |      20 | Lesser |
++--------+-------+----------+--------+---------+--------+
+1 row in set (0.00 sec)
+
++--------+-------+----------+---------+---------+--------+
+| vempno | vname | vjob     | vsal    | vdeptno | status |
++--------+-------+----------+---------+---------+--------+
+|   7499 | ALLEN | SALESMAN | 1840.00 |      30 | Lesser |
++--------+-------+----------+---------+---------+--------+
+1 row in set (0.00 sec)
+
++--------+-------+----------+---------+---------+--------+
+| vempno | vname | vjob     | vsal    | vdeptno | status |
++--------+-------+----------+---------+---------+--------+
+|   7521 | WARD  | SALESMAN | 1437.50 |      30 | Lesser |
++--------+-------+----------+---------+---------+--------+
+1 row in set (0.01 sec)
+
++--------+-------+---------+---------+---------+---------+
+| vempno | vname | vjob    | vsal    | vdeptno | status  |
++--------+-------+---------+---------+---------+---------+
+|   7566 | JONES | MANAGER | 2975.00 |      20 | Greater |
++--------+-------+---------+---------+---------+---------+
+1 row in set (0.01 sec)
+
++--------+--------+----------+---------+---------+--------+
+| vempno | vname  | vjob     | vsal    | vdeptno | status |
++--------+--------+----------+---------+---------+--------+
+|   7654 | MARTIN | SALESMAN | 1437.50 |      30 | Lesser |
++--------+--------+----------+---------+---------+--------+
+1 row in set (0.01 sec)
+
++--------+-------+---------+---------+---------+--------+
+| vempno | vname | vjob    | vsal    | vdeptno | status |
++--------+-------+---------+---------+---------+--------+
+|   7698 | BLAKE | MANAGER | 2850.00 |      30 | Lesser |
++--------+-------+---------+---------+---------+--------+
+1 row in set (0.01 sec)
+
++--------+-------+---------+---------+---------+--------+
+| vempno | vname | vjob    | vsal    | vdeptno | status |
++--------+-------+---------+---------+---------+--------+
+|   7782 | CLARK | Manager | 2817.50 |      10 | Lesser |
++--------+-------+---------+---------+---------+--------+
+1 row in set (0.01 sec)
+
++--------+-------+---------+---------+---------+---------+
+| vempno | vname | vjob    | vsal    | vdeptno | status  |
++--------+-------+---------+---------+---------+---------+
+|   7788 | SCOTT | ANALYST | 3000.00 |      20 | Greater |
++--------+-------+---------+---------+---------+---------+
+1 row in set (0.01 sec)
+
++--------+-------+---------+---------+---------+---------+
+| vempno | vname | vjob    | vsal    | vdeptno | status  |
++--------+-------+---------+---------+---------+---------+
+|   7839 | KING  | Manager | 5750.00 |      10 | Greater |
++--------+-------+---------+---------+---------+---------+
+1 row in set (0.01 sec)
+
++--------+--------+----------+---------+---------+--------+
+| vempno | vname  | vjob     | vsal    | vdeptno | status |
++--------+--------+----------+---------+---------+--------+
+|   7844 | TURNER | SALESMAN | 1500.00 |      30 | Lesser |
++--------+--------+----------+---------+---------+--------+
+1 row in set (0.01 sec)
+
++--------+-------+-------+---------+---------+--------+
+| vempno | vname | vjob  | vsal    | vdeptno | status |
++--------+-------+-------+---------+---------+--------+
+|   7876 | ADAMS | CLERK | 1100.00 |      20 | Lesser |
++--------+-------+-------+---------+---------+--------+
+1 row in set (0.02 sec)
+
++--------+-------+-------+--------+---------+--------+
+| vempno | vname | vjob  | vsal   | vdeptno | status |
++--------+-------+-------+--------+---------+--------+
+|   7900 | JAMES | CLERK | 950.00 |      30 | Lesser |
++--------+-------+-------+--------+---------+--------+
+1 row in set (0.02 sec)
+
++--------+-------+---------+---------+---------+---------+
+| vempno | vname | vjob    | vsal    | vdeptno | status  |
++--------+-------+---------+---------+---------+---------+
+|   7902 | FORD  | ANALYST | 3000.00 |      20 | Greater |
++--------+-------+---------+---------+---------+---------+
+1 row in set (0.02 sec)
+
++--------+--------+---------+---------+---------+--------+
+| vempno | vname  | vjob    | vsal    | vdeptno | status |
++--------+--------+---------+---------+---------+--------+
+|   7934 | MILLER | Manager | 1495.00 |      10 | Lesser |
++--------+--------+---------+---------+---------+--------+
+1 row in set (0.02 sec)
+
++--------+---------+----------+----------+---------+---------+
+| vempno | vname   | vjob     | vsal     | vdeptno | status  |
++--------+---------+----------+----------+---------+---------+
+|   7569 | Nishant | Investor | 10000.00 |      30 | Greater |
++--------+---------+----------+----------+---------+---------+
+1 row in set (0.02 sec)
+
++--------+--------+---------+----------+---------+---------+
+| vempno | vname  | vjob    | vsal     | vdeptno | status  |
++--------+--------+---------+----------+---------+---------+
+|   7570 | Akshay | Partner | 10000.00 |      30 | Greater |
++--------+--------+---------+----------+---------+---------+
+1 row in set (0.03 sec)
+
++--------+-------+---------+----------+---------+---------+
+| vempno | vname | vjob    | vsal     | vdeptno | status  |
++--------+-------+---------+----------+---------+---------+
+|   7571 | Lavee | Partner | 10000.00 |      30 | Greater |
++--------+-------+---------+----------+---------+---------+
+1 row in set (0.03 sec)
+
++--------+----------+-------+---------+---------+--------+
+| vempno | vname    | vjob  | vsal    | vdeptno | status |
++--------+----------+-------+---------+---------+--------+
+|    101 | Abhishek | sales | 1500.00 |      10 | Lesser |
++--------+----------+-------+---------+---------+--------+
+1 row in set (0.03 sec)
+
++--------+-------+-------+---------+---------+--------+
+| vempno | vname | vjob  | vsal    | vdeptno | status |
++--------+-------+-------+---------+---------+--------+
+|    102 | kadam | clerk | 1500.00 |      20 | Lesser |
++--------+-------+-------+---------+---------+--------+
+1 row in set (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
 
 8. Write a procedure to update salary in emp table based on following rules.
 Exp< =35 then no Update
 Exp> 35 and <=38 then 20% of salary
 Exp> 38 then 25% of salary
 
-
+mysql> delimiter $$
+mysql> create procedure updateSal()
+    -> begin
+    -> declare v_stop int default 0;
+    -> declare vhrdt date;
+    -> declare vexp int;
+    -> declare vempno int;
+    -> declare vsal decimal(9, 2);
+    -> declare empcur cursor for select empno, sal, hiredate from emp2;
+    -> declare continue handler for Not Found set v_stop=1;
+    -> open empcur;
+    -> label1: loop
+    -> fetch empcur into vempno, vsal, vhrdt;
+    -> if v_stop=1 then
+    -> leave label1;
+    -> end if;
+    ->
+    -> select floor(datediff(curdate(), vhrdt)/365) into vexp
+    -> from emp2 e
+    -> where e.empno = vempno;
+    ->
+    -> if vexp between 36 and 38 then
+    -> set vsal  = 1.2*vsal;
+    ->
+    -> elseif vexp>38 then
+    -> set vsal = vsal + (.2*vsal);
+    ->
+    -> end if;
+    ->
+    -> update emp2 e
+    -> set e.sal = vsal
+    -> where e.empno = vempno;
+    ->
+    -> select vempno, vsal, vhrdt;
+    ->
+    -> end loop;
+    -> close empcur;
+    -> end $$
+Query OK, 0 rows affected (0.07 sec)
 
 9. Write a procedure and a function.
 Function: write a function to calculate number of years of experience of employee.(note: 
@@ -170,6 +381,76 @@ hiredate date,
 experience int,
 allowance decimal(9,2));
 
+mysql> SET GLOBAL log_bin_trust_function_creators = 1;
+    ->
+    -> create function getExp(hrdt date)
+    -> returns int
+    ->
+    -> begin
+    -> declare exp int default 0;
+    -> set exp = floor(datediff(curdate(), hrdt)/365);
+    -> return exp;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+
+mysql> delimiter $$
+mysql> create procedure addAllow()
+    -> begin
+    -> declare v_stop int default 0;
+    -> declare vexp int;
+    -> declare vhrdt date;
+    -> declare vempno int;
+    -> declare vename varchar(20);
+    -> declare vallow decimal(9, 2);
+    -> declare empcur cursor for select empno, ename, hiredate from emp2;
+    -> declare continue handler for Not Found set v_stop=1;
+    -> open empcur;
+    -> label1: loop
+    -> fetch empcur into vempno, vename, vhrdt;
+    -> if v_stop=1 then
+    -> leave label1;
+    -> end if;
+    ->
+    -> set vexp = getExp(vhrdt);
+    -> set vallow = vexp*3000;
+    ->
+    -> insert into emp_allowance values
+    -> (vempno, vename, vhrdt, vexp, vallow);
+    ->
+    -> select vempno, vhrdt, vallow;
+    ->
+    -> end loop;
+    -> close empcur;
+    -> end $$
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select *
+    -> from emp_allowance;
++-------+----------+------------+------------+-----------+
+| empno | ename    | hiredate   | experience | allowance |
++-------+----------+------------+------------+-----------+
+|  7369 | SMITH    | 1980-12-17 |         41 | 123000.00 |
+|  7499 | ALLEN    | 1981-02-20 |         41 | 123000.00 |
+|  7521 | WARD     | 1981-02-22 |         41 | 123000.00 |
+|  7566 | JONES    | 1981-04-02 |         41 | 123000.00 |
+|  7654 | MARTIN   | 1981-09-28 |         41 | 123000.00 |
+|  7698 | BLAKE    | 1981-05-01 |         41 | 123000.00 |
+|  7782 | CLARK    | 1981-06-09 |         41 | 123000.00 |
+|  7788 | SCOTT    | 1982-12-09 |         39 | 117000.00 |
+|  7839 | KING     | 1981-11-17 |         40 | 120000.00 |
+|  7844 | TURNER   | 1981-09-08 |         41 | 123000.00 |
+|  7876 | ADAMS    | 1983-01-12 |         39 | 117000.00 |
+|  7900 | JAMES    | 1981-12-03 |         40 | 120000.00 |
+|  7902 | FORD     | 1981-12-03 |         40 | 120000.00 |
+|  7934 | MILLER   | 1982-01-23 |         40 | 120000.00 |
+|  7569 | Nishant  | 1981-09-02 |         41 | 123000.00 |
+|  7570 | Akshay   | 1981-09-02 |         41 | 123000.00 |
+|  7571 | Lavee    | 1985-04-15 |         37 | 111000.00 |
+|   101 | Abhishek | 1995-02-02 |         27 |  81000.00 |
+|   102 | kadam    | 1996-02-02 |         26 |  78000.00 |
++-------+----------+------------+------------+-----------+
+19 rows in set (0.00 sec)
 
 
 10. Write a function to compute the following. Function should take sal and hiredate 
@@ -180,8 +461,72 @@ Special Allowance will be decided based on the service in the company.
 >=1 Year< 2 Year 10% of Salary
 >=2 Year< 4 Year 20% of Salary
 >4 Year 30% of Salary
+
+mysql> delimiter $$
+mysql> create function getCtc(sal decimal(9, 2), hrdt date)
+    -> returns decimal(9, 2)
+    -> begin
+    -> declare da decimal(9, 2);
+    -> declare hra decimal(9, 2);
+    -> declare ta decimal(9, 2);
+    -> declare sa decimal(9, 2);
+    -> declare ctc decimal(9, 2);
+    -> declare exp int;
+    ->
+    -> set da = .15*sal;
+    -> set hra = .2 * sal;
+    -> set ta = .8 * sal;
+    ->
+    -> set exp = getExp(hrdt);
+    ->
+    -> if exp<1 then
+    -> set sa = 0;
+    -> elseif exp>=1 and exp<2 then
+    -> set sa = .1*sal;
+    -> elseif exp>=2 and exp<4 then
+    -> set sa = .2*sal;
+    -> elseif exp>4 then
+    -> set sa = .3*sal;
+    -> end if;
+    ->
+    -> set ctc = da+hra+ta+sa;
+    ->
+    -> return ctc;
+    ->
+    -> end $$
+Query OK, 0 rows affected (0.06 sec)
+
+
 11. Write query to display empno,ename,sal,cost to company for all employees(note: 
 use function written in question 10)
+
+mysql> select e.empno, e.ename, e.sal, getCtc(e.sal, e.hiredate) CTC
+    -> from emp2 e;
++-------+----------+----------+----------+
+| empno | ename    | sal      | CTC      |
++-------+----------+----------+----------+
+|  7369 | SMITH    |  1152.00 |  1670.40 |
+|  7499 | ALLEN    |  2208.00 |  3201.60 |
+|  7521 | WARD     |  1725.00 |  2501.25 |
+|  7566 | JONES    |  3570.00 |  5176.50 |
+|  7654 | MARTIN   |  1725.00 |  2501.25 |
+|  7698 | BLAKE    |  3420.00 |  4959.00 |
+|  7782 | CLARK    |  3381.00 |  4902.45 |
+|  7788 | SCOTT    |  3600.00 |  5220.00 |
+|  7839 | KING     |  6900.00 | 10005.00 |
+|  7844 | TURNER   |  1800.00 |  2610.00 |
+|  7876 | ADAMS    |  1320.00 |  1914.00 |
+|  7900 | JAMES    |  1140.00 |  1653.00 |
+|  7902 | FORD     |  3600.00 |  5220.00 |
+|  7934 | MILLER   |  1794.00 |  2601.30 |
+|  7569 | Nishant  | 12000.00 | 17400.00 |
+|  7570 | Akshay   | 12000.00 | 17400.00 |
+|  7571 | Lavee    | 12000.00 | 17400.00 |
+|   101 | Abhishek |  1500.00 |  2175.00 |
+|   102 | kadam    |  1500.00 |  2175.00 |
++-------+----------+----------+----------+
+19 rows in set (0.00 sec)
+
 Q2. Write trigger
 1. Write a tigger to store the old salary details in Emp _Back (Emp _Back has the 
 same structure as emp table without any
