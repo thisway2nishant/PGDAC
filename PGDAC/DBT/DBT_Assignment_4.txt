@@ -542,17 +542,61 @@ newsal decimal(9,2)
 (note :
 execute procedure written in Q8 and 
 check the entries in EMP_back table after execution of the procedure)
+
+mysql> delimiter $$
+mysql> create trigger empBack before update on emp2
+    -> for each row
+    -> begin
+    -> insert into emp_back values
+    -> (old.empno, old.ename, old.sal, new.sal);
+    -> end $$
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> delimiter ;
+
+mysql> select *
+    -> from emp_back;
++-------+----------+----------+----------+
+| empno | ename    | oldsal   | newsal   |
++-------+----------+----------+----------+
+|  7369 | SMITH    |  1152.00 |  1382.40 |
+|  7499 | ALLEN    |  2208.00 |  2649.60 |
+|  7521 | WARD     |  1725.00 |  2070.00 |
+|  7566 | JONES    |  3570.00 |  4284.00 |
+|  7654 | MARTIN   |  1725.00 |  2070.00 |
+|  7698 | BLAKE    |  3420.00 |  4104.00 |
+|  7782 | CLARK    |  3381.00 |  4057.20 |
+|  7788 | SCOTT    |  3600.00 |  4320.00 |
+|  7839 | KING     |  6900.00 |  8280.00 |
+|  7844 | TURNER   |  1800.00 |  2160.00 |
+|  7876 | ADAMS    |  1320.00 |  1584.00 |
+|  7900 | JAMES    |  1140.00 |  1368.00 |
+|  7902 | FORD     |  3600.00 |  4320.00 |
+|  7934 | MILLER   |  1794.00 |  2152.80 |
+|  7569 | Nishant  | 12000.00 | 14400.00 |
+|  7570 | Akshay   | 12000.00 | 14400.00 |
+|  7571 | Lavee    | 12000.00 | 14400.00 |
+|   101 | Abhishek |  1500.00 |  1500.00 |
+|   102 | kadam    |  1500.00 |  1500.00 |
++-------+----------+----------+----------+
+19 rows in set (0.00 sec)
+
+
 2. Write a trigger which add entry in audit table when user tries to insert or delete 
 records in employee table store empno,name,username and date on which 
 operation performed and which action is done insert or delete. in emp_audit table.
 create table before writing trigger.
+
 create table empaudit(
- empno int;
+ empno int,
  ename varchar(20),
- username varchar(20);
- chdate date;
+ username varchar(20),
+ chdate date,
  action varchar(20)
 );
+
+
+
 3. Create table vehicle_history. Write a trigger to store old vehicleprice and new vehicle 
 price in history table before you update price in vehicle table
 (note: use vehicle table).
@@ -563,3 +607,13 @@ oldprice decimal(9,2),
 newprice decimal(9,2),
 chdate date,
 username varchar(20)
+
+
+delimiter $$
+create trigger vehUpdt before update on vehicle
+for each row
+begin
+insert into vehicle_history values
+(old.vid, old.vname, old.price, new.price, curdate(), suser_sname());
+end $$
+
