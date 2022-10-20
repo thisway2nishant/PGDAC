@@ -79,6 +79,12 @@ public class FruitBasket {
 					if(f.getFresh()) {
 						System.out.println(f.toString());
 					}
+					else {
+						System.out.println("No fresh fruit in the basket.");
+					}
+				}
+				else {
+					System.out.println("Invalid Index. Enter index less than "+ counter);
 				}
 			}
 			break;

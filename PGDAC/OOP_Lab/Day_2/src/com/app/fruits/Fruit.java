@@ -18,6 +18,7 @@ public class Fruit {
 	}
 
 	// methods
+	@Override
 	public String toString() {
 		return "Name: " + this.name + " Color: " + this.color + " Weight: " + this.weight;
 	}
